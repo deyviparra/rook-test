@@ -9,12 +9,23 @@ export async function GET(request) {
   })
 }
 export async function POST(request) {
-  const client = await mongodb
-  const db = client.db('rook')
-  const collection = db.collection('events')
-  const body = await request.json()
-  await collection.insertOne(body)
-  return NextResponse.json({ok:'ok'}, {
-    status: 200,
-  })
+  try{
+    const client = await mongodb
+    console.log('connected')
+    const db = client.db('rook')
+    const collection = db.collection('events')
+    const body = await request.json()
+    console.log(body)
+    await collection.insertOne(body)
+    console.log('inserted')
+    return NextResponse.json({ok:'ok'}, {
+      status: 200,
+    })
+  } catch(e){
+    console.log(e)
+    const error = {error:e}
+    return NextResponse.json(error, {
+      status: 500,
+    })
+  }
 }
